@@ -25,7 +25,7 @@ public class Main {
 		return sizeOfArr;
 	}
 
-	// This method will allow the user to populate the array created manually.
+	// This method will allow the user to populate the array manually.
 	public static char[][] manPopulateArr(char[][] arr) {
 		for (int i = 0; i < arr.length; i++) {
 			for (int j = 0; j < arr.length; j++) {
@@ -33,26 +33,36 @@ public class Main {
 				arr[i][j] = scnr.next().charAt(0);
 			}
 		}
+		System.out.println("Array Populated.");
 		return arr;
 	}
 
 	// This method will populate the array with characters from a file
 	// automatically. For testing purposes, I hard-coded the file path. Change the
 	// filePath variable for your machine or place my txt files in your current
-	// directory.
-	// FIXME: Only reads first line, needs to read entire file
+	// directory. The only exception handling is the FileNotFoundException. The
+	// program will crash if the array size does not match the file input size.
+
 	public static char[][] filePopulateArr(char[][] arr) {
 		try {
+			// Change the text in quotations("") to run the code on any text file of your
+			// choosing.
 			File filePath = new File("txtFiles/valid3.txt");
 			Scanner readFile = new Scanner(filePath);
-			while (readFile.hasNext()) {
-//				String data = readFile.nextLine();
-//				System.out.println(data);
-				char data = readFile.next().charAt(0);
-				System.out.println(data);
+			// i is iterating through the rows, while j iterates through the columns of the
+			// array.
+			int i = 0;
+			while (readFile.hasNextLine()) {
+				String data = readFile.nextLine();
+				// Parsing the line of text for individual characters
+				for (int j = 0; j < data.length(); j++) {
+					// Storing the character into the array
+					arr[i][j] = data.charAt(j);
+				}
+				i++;
 			}
 			readFile.close();
-			System.out.println("done");
+			System.out.println("Array Populated.");
 		} catch (FileNotFoundException e) {
 			System.out.println("File not found");
 		}
@@ -60,11 +70,36 @@ public class Main {
 		return arr;
 	}
 
+	public static boolean isLatinSquare(char[][] arr) {
+		// Checking the rows only
+		int end = arr.length-1;
+		for (int i = 0; i < arr.length; i++) {
+			for (int j = 0; j < arr.length - 1; j++) {
+				System.out.println(arr[i][0] + " == " + arr[i][j + 1]+ " ?" );
+				if(arr[i][0] == arr[i][j + 1])
+					return false;
+			}
+		}
+		System.out.println("done");
+		// Checking the columns only
+		for (int i = 0; i < arr.length; i++) {
+			for (int j = 0; j < arr.length -1; j++) {
+				System.out.println(arr[0][i]+ " == " + arr[j + 1][i] + " ?" );
+				if(arr[0][i] == arr[j + 1][i])
+					return false;
+
+			}
+		}
+		
+		return true;
+	}
+
 	public static void main(String[] args) {
 		int sizeOfArr = getSize();
 		char[][] arr = new char[sizeOfArr][sizeOfArr];
 		// manPopulateArr(arr);
-		filePopulateArr(arr);
+		arr = filePopulateArr(arr);
+		System.out.println(isLatinSquare(arr));
 		scnr.close();
 	}
 
